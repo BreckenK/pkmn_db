@@ -1,0 +1,57 @@
+
+/*VIEWS:*/
+USE pkmndb;
+/*Query 1: Effective_Vs_Water*/
+DROP VIEW IF EXISTS Effective_Vs_Water;
+CREATE VIEW Effective_Vs_Water AS
+SELECT move_id, type_name, move_title, category, power, acc, pp, effectiveness 
+FROM moves
+JOIN type_effect ON type_id = atk_id join types t using (type_id)
+WHERE def_id = 3 and effectiveness = 1
+ORDER BY move_id;
+
+/*Query 2: Grass_Type_Atkspeed*/
+DROP VIEW IF EXISTS Grass_Type_Atkspeed;
+CREATE VIEW Grass_Type_Atkspeed AS
+SELECT poke_name, MAX(atk+speed) AS 'Atk/Speed Sum', type1_id
+FROM pokemon
+WHERE type1_id=5
+GROUP BY poke_name
+ORDER BY 'Atk/Speed Sum' DESC; 
+
+/*Query 3: Avg_Type_Atk*/
+DROP VIEW IF EXISTS Avg_Type_Atk;
+CREATE VIEW Avg_Type_Atk AS
+SELECT type_name, AVG(atk) AS 'Average Attack'
+FROM pokemon LEFT JOIN types on type_id = type1_id
+group by type_id;
+
+/*Query 4: Query_Viridian*/
+DROP VIEW IF EXISTS Query_Viridian;
+CREATE VIEW Query_Viridian AS 
+SELECT p.poke_name, AVG(p.speed) as 'Above Average Speed'
+    FROM pokemon p, poke_locations pl, location l
+    WHERE p.poke_id = pl.poke_id 
+    AND pl.location_id = l.location_id
+AND p.speed >
+    (SELECT AVG(p.speed) from pokemon p join poke_locations pl
+    WHERE pl.location_id = 51 and p.poke_id = pl.poke_id);
+
+/*Query 5: Hydro_Pump*/
+DROP VIEW IF EXISTS Hydro_Pump;
+CREATE VIEW Hydro_Pump AS
+SELECT poke_name, move_id, level
+FROM pokemon p JOIN poke_moves c
+    on p.poke_id=c.poke_id join moves m using (move_id)
+WHERE m.move_title = 'Hydro Pump'
+ORDER BY poke_name, level;
+
+/*QUERIES:*/
+
+/*Select all moves, including power and type, along with each pokemon that can learn it, and that pokemon's special attack*/
+use pkmndb;
+select m.move_title, m.power, t.type_name, p.poke_name, p.specialatk 
+from poke_moves pm join pokemon p using (poke_id) join moves m using (move_id) join types t using (type_id)
+where pm.move_id in (SELECT move_id FROM mydb.effective_vs_water) and power > 0 and category = 'Special'
+order by p.specialatk DESC, m.power DESC;
+
