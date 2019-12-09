@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `avg_type_atk`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `avg_type_atk` AS SELECT 
- 1 AS `type_name`,
+ 1 AS `Type Name`,
  1 AS `Average Attack`*/;
 SET character_set_client = @saved_cs_client;
 
@@ -40,11 +40,11 @@ SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `effective_vs_water` AS SELECT 
  1 AS `move_id`,
- 1 AS `type_name`,
- 1 AS `move_title`,
+ 1 AS `Type`,
+ 1 AS `Move`,
  1 AS `category`,
  1 AS `power`,
- 1 AS `acc`,
+ 1 AS `Accuracy`,
  1 AS `pp`,
  1 AS `effectiveness`*/;
 SET character_set_client = @saved_cs_client;
@@ -86,9 +86,9 @@ DROP TABLE IF EXISTS `grass_type_atkspeed`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `grass_type_atkspeed` AS SELECT 
- 1 AS `poke_name`,
+ 1 AS `Pokemon`,
  1 AS `Atk/Speed Sum`,
- 1 AS `type1_id`*/;
+ 1 AS `Type ID`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -100,8 +100,8 @@ DROP TABLE IF EXISTS `hydro_pump`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `hydro_pump` AS SELECT 
- 1 AS `poke_name`,
- 1 AS `move_id`,
+ 1 AS `Pokemon`,
+ 1 AS `Move ID`,
  1 AS `level`*/;
 SET character_set_client = @saved_cs_client;
 
@@ -263,7 +263,7 @@ DROP TABLE IF EXISTS `query_viridian`;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
 /*!50001 CREATE VIEW `query_viridian` AS SELECT 
- 1 AS `poke_name`,
+ 1 AS `Pokemon`,
  1 AS `Above Average Speed`*/;
 SET character_set_client = @saved_cs_client;
 
@@ -331,8 +331,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`python`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `avg_type_atk` AS select `types`.`type_name` AS `type_name`,avg(`pokemon`.`atk`) AS `Average Attack` from (`pokemon` left join `types` on((`types`.`type_id` = `pokemon`.`type1_id`))) group by `types`.`type_id` */;
+/*!50001 VIEW `avg_type_atk` AS select `types`.`type_name` AS `Type Name`,avg(`pokemon`.`atk`) AS `Average Attack` from (`pokemon` left join `types` on((`types`.`type_id` = `pokemon`.`type1_id`))) group by `types`.`type_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -349,8 +348,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`python`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `effective_vs_water` AS select `moves`.`move_id` AS `move_id`,`t`.`type_name` AS `type_name`,`moves`.`move_title` AS `move_title`,`moves`.`category` AS `category`,`moves`.`power` AS `power`,`moves`.`acc` AS `acc`,`moves`.`pp` AS `pp`,`type_effect`.`effectiveness` AS `effectiveness` from ((`moves` join `type_effect` on((`moves`.`type_id` = `type_effect`.`atk_id`))) join `types` `t` on((`moves`.`type_id` = `t`.`type_id`))) where ((`type_effect`.`def_id` = 3) and (`type_effect`.`effectiveness` = 1)) order by `moves`.`move_id` */;
+/*!50001 VIEW `effective_vs_water` AS select `moves`.`move_id` AS `move_id`,`t`.`type_name` AS `Type`,`moves`.`move_title` AS `Move`,`moves`.`category` AS `category`,`moves`.`power` AS `power`,`moves`.`acc` AS `Accuracy`,`moves`.`pp` AS `pp`,`type_effect`.`effectiveness` AS `effectiveness` from ((`moves` join `type_effect` on((`moves`.`type_id` = `type_effect`.`atk_id`))) join `types` `t` on((`moves`.`type_id` = `t`.`type_id`))) where ((`type_effect`.`def_id` = 3) and (`type_effect`.`effectiveness` = 1)) order by `moves`.`move_id` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -367,8 +365,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`python`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `grass_type_atkspeed` AS select `pokemon`.`poke_name` AS `poke_name`,max((`pokemon`.`atk` + `pokemon`.`speed`)) AS `Atk/Speed Sum`,`pokemon`.`type1_id` AS `type1_id` from `pokemon` where (`pokemon`.`type1_id` = 5) group by `pokemon`.`poke_name` order by 'Atk/Speed Sum' desc */;
+/*!50001 VIEW `grass_type_atkspeed` AS select `pokemon`.`poke_name` AS `Pokemon`,max((`pokemon`.`atk` + `pokemon`.`speed`)) AS `Atk/Speed Sum`,`pokemon`.`type1_id` AS `Type ID` from `pokemon` where (`pokemon`.`type1_id` = 5) group by `pokemon`.`poke_name` order by 'Atk/Speed Sum' desc */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -385,8 +382,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`python`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `hydro_pump` AS select `p`.`poke_name` AS `poke_name`,`c`.`move_id` AS `move_id`,`c`.`level` AS `level` from ((`pokemon` `p` join `poke_moves` `c` on((`p`.`poke_id` = `c`.`poke_id`))) join `moves` `m` on((`c`.`move_id` = `m`.`move_id`))) where (`m`.`move_title` = 'Hydro Pump') order by `p`.`poke_name`,`c`.`level` */;
+/*!50001 VIEW `hydro_pump` AS select `p`.`poke_name` AS `Pokemon`,`c`.`level` AS `level` from ((`pokemon` `p` join `poke_moves` `c` on((`p`.`poke_id` = `c`.`poke_id`))) join `moves` `m` on((`c`.`move_id` = `m`.`move_id`))) where (`m`.`move_title` = 'Hydro Pump') order by `p`.`poke_name`,`c`.`level` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -403,8 +399,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`python`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `query_viridian` AS select `p`.`poke_name` AS `poke_name`,`p`.`speed` AS `Above Average Speed` from ((`poke_locations` `pl` join `location` `l` on((`pl`.`location_id` = `l`.`location_id`))) join `pokemon` `p` on((`pl`.`poke_id` = `p`.`poke_id`))) where ((`p`.`poke_id` = `pl`.`poke_id`) and (`pl`.`location_id` = 51) and (`pl`.`location_id` = `l`.`location_id`) and (`p`.`speed` > (select avg(`p`.`speed`) from (`pokemon` `p` join `poke_locations` `pl`) where ((`pl`.`location_id` = 51) and (`p`.`poke_id` = `pl`.`poke_id`))))) */;
+/*!50001 VIEW `query_viridian` AS select `p`.`poke_name` AS `Pokemon`,`p`.`speed` AS `Above Average Speed` from ((`pokemon` `p` join `poke_locations` `pl`) join `location` `l`) where ((`p`.`poke_id` = `pl`.`poke_id`) and (`pl`.`location_id` = 51) and (`pl`.`location_id` = `l`.`location_id`) and (`p`.`speed` > (select avg(`p`.`speed`) from (`pokemon` `p` join `poke_locations` `pl`) where ((`pl`.`location_id` = 51) and (`p`.`poke_id` = `pl`.`poke_id`))))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -418,4 +413,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-12-06 13:30:19
+-- Dump completed on 2019-12-06 16:31:49
