@@ -14,3 +14,5 @@ Schema designed by Brecken Keller
 
 Example Exploratory Analysis:
 ![Average Attack vs Special Attack by Type](Graph.png)
+
+![Sum of Base Pokemon Stats](sum.png)
